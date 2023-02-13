@@ -1,9 +1,12 @@
 <template>
     <div id="ground" ref="Rocks">
+        <!-- <div><h1 @click="test()">233</h1></div> -->
     </div>
 </template>
 
 <script>
+// @ is an alias to /src
+// import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
   name: 'gamescreen',
@@ -14,17 +17,17 @@ export default {
     return {
         rocks: [],
         //整体场地方格
-        GROUND_WIDTH: 32,
-        GROUND_HEIGTH: 18,
+        GROUND_WIDTH: 16,
+        GROUND_HEIGTH: 3,
         rockPoint:[],
         result:{},
         //初始化 '我' 的位置
-        ID: 63,
+        ID: 3,
         //场地生态
         String1: '[赶快开门出去吧……]',
-        Start1:61,
+        Start1:1,
         String2: '我在心里对自己说，并举步向前。',
-        Start2:63,
+        Start2:3,
         //触发点
         tp:'门',
     }
@@ -83,10 +86,10 @@ export default {
         },
         //场地容器
         initializeContainer() {
-            // this.$refs.Rocks.style.top = '280px';
-            // this.$refs.Rocks.style.left = '60px';
-            // this.$refs.Rocks.style.width = '100px';
-            // this.$refs.Rocks.style.height = '100px';
+            this.$refs.Rocks.style.top = '280px';
+            this.$refs.Rocks.style.left = '60px';
+            this.$refs.Rocks.style.width = '100px';
+            this.$refs.Rocks.style.height = '100px';
             this.$refs.Rocks.style.backgroundColor = 'black';
             this.$refs.Rocks.style.position = "relative";
             this.$refs.Rocks.style.display = "inline-block";
@@ -94,15 +97,15 @@ export default {
         //画出每个小方格
         drawRocks(i,j){
             let rock = document.createElement("div");
-            rock.style.width = '43px';
-            rock.style.height = '43px';
+            rock.style.width = '40px';
+            rock.style.height = '40px';
             rock.style.backgroundColor = 'black';
             //找爸爸
             rock.style.position = "absolute";
-            rock.style.top = `${j * 43}px`;
-            rock.style.left = `${i * 43}px`;
+            rock.style.top = `${j * 45}px`;
+            rock.style.left = `${i * 45}px`;
             rock.style.textAlign = 'center';
-            rock.style.fontSize = '37px';
+            rock.style.fontSize = '30px';
             rock.style.color = 'white';
             this.$refs.Rocks.append(rock);
             return rock;
