@@ -6,7 +6,7 @@
 <script>
 
 export default {
-  name: 'gamescreen',
+  name: 'content_01',
   components: {
 
   },
@@ -79,15 +79,8 @@ export default {
     this.initializeContainer();
     this.createWall();
     //监听键盘指令
-    document.addEventListener("keydown", e => {
-        switch (e.key.toLocaleUpperCase ()){
-            case " ":
-            case 'ENTER':
-            console.log(e.key);
-            this.judgmentContent(this.f)
-            break;
-        }
-      });
+    this.keyDownEvent = (event) => {this.keyDownEvents(event)}
+    document.addEventListener("keydown",this.keyDownEvent);
       //将文本内容填充
       this.DELAY = this.String1_1.length * this.delay + this.String1_2.length * this.delay + this.String1_3.length * this.delay
       this.initializeF(this.DELAY)
@@ -96,6 +89,10 @@ export default {
         this.String1_1.length * this.delay);
       setTimeout(()=>this.drawsimplerow(this.String1_3,this.Start1_3), 
         this.String1_1.length * this.delay + this.String1_2.length * this.delay);
+    },
+    beforeDestroy(){
+        console.log('1');
+        document.removeEventListener("keydown",this.keyDownEvent); 
     },
     methods:{
         //初始化
@@ -137,7 +134,7 @@ export default {
             rock.style.top = `${j * 43}px`;
             rock.style.left = `${i * 43}px`;
             rock.style.textAlign = 'center';
-            rock.style.fontSize = '37px';
+            rock.style.fontSize = '35px';
             rock.style.color = 'white';
             this.$refs.Rocks.append(rock);
             return rock;
@@ -258,9 +255,8 @@ export default {
                 + this.String7_2.length * this.delay);
             break;
             case 8:
-            this.$router.push({
-                path: 'puzzle_01'
-            })
+            document.removeEventListener("keydown",this.keyDownEvent);
+            this.$parent.updataCheckPoint();
         }
         },
         //横向填充
@@ -282,6 +278,15 @@ export default {
             this.f = 0
             setTimeout(() => {this.f = IF+1;this.DELAY = ''}, DELAY);
         },
+        keyDownEvents(e){    
+            switch (e.key.toLocaleUpperCase ()){
+            case " ":
+            case 'ENTER':
+            console.log(e.key);
+            this.judgmentContent(this.f)
+            break;
+            }
+        }
     }
 }
 </script>

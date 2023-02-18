@@ -1,12 +1,9 @@
 <template>
     <div id="ground" ref="Rocks">
-        <!-- <div><h1 @click="test()">233</h1></div> -->
     </div>
 </template>
 
 <script>
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
   name: 'gamescreen',
@@ -17,59 +14,39 @@ export default {
     return {
         rocks: [],
         //整体场地方格
-        GROUND_WIDTH: 16,
-        GROUND_HEIGTH: 3,
+        GROUND_WIDTH: 32,
+        GROUND_HEIGTH: 18,
         rockPoint:[],
         result:{},
         //初始化 '我' 的位置
-        ID: 3,
+        ID: 63,
+        delay: 80,
         //场地生态
         String1: '[赶快开门出去吧……]',
-        Start1:1,
+        Start1:61,
         String2: '我在心里对自己说，并举步向前。',
-        Start2:3,
+        Start2:63,
         //触发点
         tp:'门',
     }
   },
   mounted() {
-    window.app = this;
+    // window.app = this;
     this.createRocksData();
     this.initializeContainer();
     this.createWall();
     //监听键盘指令
-    document.addEventListener("keydown", e => {
-        switch (e.key.toLocaleUpperCase ()){
-            case "ARROWRIGHT":
-            case 'D':
-            console.log(e.key) ;
-            this.turn(this.GROUND_HEIGTH);
-            break;
-            case "ARROWLEFT":
-            case 'A':
-            console.log(e.key);
-            this.turn(-this.GROUND_HEIGTH);
-            break;
-            case "ARROWDOWN":
-            case 'S':
-            console.log(e.key);
-            this.turn(1);
-            break;
-            case "ARROWUP":
-            case 'W':
-            console.log(e.key);
-            this.turn(-1);
-            break;
-            case " ":
-            case '0':
-            console.log(e.key);
-            this.judgment(this.tp)
-            break;
-        }
-      });
-      //将文本内容填充
-      this.drawsimplerow(this.String1,this.Start1)
-      this.drawsimplerow(this.String2,this.Start2)
+    setTimeout(() => {
+        this.keyDownEvent = (event) => {this.keyDownEvents(event)}
+        document.addEventListener("keydown",this.keyDownEvent);
+    }, (this.String1.length + 2) * this.delay);
+    //将文本内容填充
+    this.drawsimplerow(this.String1,this.Start1)
+    setTimeout(() => this.drawsimplerow(this.String2,this.Start2), this.String1.length * this.delay);
+    },
+    beforeDestroy(){
+        console.log('1');
+        document.removeEventListener("keydown",this.keyDownEvent); 
     },
     methods:{
         createRocksData(){
@@ -86,10 +63,10 @@ export default {
         },
         //场地容器
         initializeContainer() {
-            this.$refs.Rocks.style.top = '280px';
-            this.$refs.Rocks.style.left = '60px';
-            this.$refs.Rocks.style.width = '100px';
-            this.$refs.Rocks.style.height = '100px';
+            // this.$refs.Rocks.style.top = '280px';
+            this.$refs.Rocks.style.left = '25px';
+            // this.$refs.Rocks.style.width = '100px';
+            // this.$refs.Rocks.style.height = '100px';
             this.$refs.Rocks.style.backgroundColor = 'black';
             this.$refs.Rocks.style.position = "relative";
             this.$refs.Rocks.style.display = "inline-block";
@@ -97,15 +74,15 @@ export default {
         //画出每个小方格
         drawRocks(i,j){
             let rock = document.createElement("div");
-            rock.style.width = '40px';
-            rock.style.height = '40px';
+            rock.style.width = '43px';
+            rock.style.height = '43px';
             rock.style.backgroundColor = 'black';
             //找爸爸
             rock.style.position = "absolute";
-            rock.style.top = `${j * 45}px`;
-            rock.style.left = `${i * 45}px`;
+            rock.style.top = `${j * 43}px`;
+            rock.style.left = `${i * 43}px`;
             rock.style.textAlign = 'center';
-            rock.style.fontSize = '30px';
+            rock.style.fontSize = '35px';
             rock.style.color = 'white';
             this.$refs.Rocks.append(rock);
             return rock;
@@ -168,20 +145,55 @@ export default {
                 || downMe.innerHTML === t 
                 || leftMe.innerHTML === t 
                 || rightMe.innerHTML === t ){
-                    alert('You Win！')
+                    document.removeEventListener("keydown",this.keyDownEvent);   
+                    this.$parent.updataCheckPoint()
+                    // this.$router.push({
+                    //     path: 'puzzle_02'
+                    // })
                 }else return
             }else return
         },
         //横向填充
         drawsimplerow(String,number){
             for(let i = 0; i < String.length; i++){
-                this.changeRocksContent(String.charAt(i),number + i * this.GROUND_HEIGTH)
+                setTimeout(() => this.changeRocksContent(String.charAt(i),number + i * this.GROUND_HEIGTH), i*this.delay);
+                // this.changeRocksContent(String.charAt(i),number + i * this.GROUND_HEIGTH)
             }
         },
         //纵向填充
         drawsimplecolumn(String,number){
             for(let i = 0; i < String.length; i++){
                 this.changeRocksContent(String.charAt(i),number + i)
+            }
+        },
+        //键盘监听
+        keyDownEvents(e){    
+            switch (e.key.toLocaleUpperCase ()){
+                case "ARROWRIGHT":
+                case 'D':
+                console.log(e.key) ;
+                this.turn(this.GROUND_HEIGTH);
+                break;
+                case "ARROWLEFT":
+                case 'A':
+                console.log(e.key);
+                this.turn(-this.GROUND_HEIGTH);
+                break;
+                case "ARROWDOWN":
+                case 'S':
+                console.log(e.key);
+                this.turn(1);
+                break;
+                case "ARROWUP":
+                case 'W':
+                console.log(e.key);
+                this.turn(-1);
+                break;
+                case " ":
+                case '0':
+                console.log(e.key);
+                this.judgment(this.tp)
+                break;
             }
         },
     }
