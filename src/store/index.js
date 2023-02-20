@@ -6,6 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     checkPoint:-1,
+    f:true,
   },
   getters: {
   },
@@ -14,15 +15,20 @@ export default new Vuex.Store({
       state.checkPoint = 0
     },
     next(state){
-      if(state.checkPoint < 20){
-        state.checkPoint++
+      if(state.f){
+        if(state.checkPoint < 20){
+        this.commit('initializeCheckPointup')
+        }else return
       }else return
+      
     },
     back(state){
-      if(state.checkPoint > 600){
-        state.checkPoint = -1;
-      }else if (state.checkPoint > -1){
-        state.checkPoint--;
+      if(state.f){
+        if(state.checkPoint > 600){
+          state.checkPoint = -1;
+        }else if (state.checkPoint > -1){
+          this.commit('initializeCheckPointdown');
+        }else return
       }else return
     },
     mainTitle(state){
@@ -30,6 +36,16 @@ export default new Vuex.Store({
     },
     editor(state){
       state.checkPoint = 666;
+    },
+    initializeCheckPointup(state){
+      state.checkPoint += 1;
+      state.f = false;
+      setTimeout(() => {state.f = true}, 3000);
+    },
+    initializeCheckPointdown(state){
+      state.checkPoint -= 1;
+      state.f = false;
+      setTimeout(() => {state.f = true}, 3000);
     },
   },
   actions: {

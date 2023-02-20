@@ -54,11 +54,15 @@ export default {
     //将文本内容填充
     this.initializeRocks()
     this.changeRocksContent('我',this.ID)
+    let me = document.getElementById(this.ID)
+    me.style.opacity = 0
+    setTimeout(() => {me.style.opacity = 1
+                      me.style.transition=('all','1s'); 
+    }, 10);
     this.drawsimplerow(this.String1,this.Start1)
     this.drawsimplerow(this.String2,this.Start2)
     },
     beforeDestroy(){
-        console.log('1');
         document.removeEventListener("keydown",this.keyDownEvent); 
     },
     methods:{
@@ -148,7 +152,24 @@ export default {
             && this.ID + z > 0 
             && futureMe.innerHTML === ''){
                 this.changeRocksContent('我',`${this.ID + z}`)
-                this.changeRocksContent('',this.ID)
+                switch(z){
+                    case 1:
+                    this.changeRocksContent('↓',this.ID)
+                    this.fadeArrow()
+                    break;                   
+                    case this.GROUND_HEIGTH:
+                    this.changeRocksContent('→',this.ID)
+                    this.fadeArrow()
+                    break;
+                    case -1:
+                    this.changeRocksContent('↑',this.ID)
+                    this.fadeArrow()
+                    break;
+                    case -this.GROUND_HEIGTH:
+                    this.changeRocksContent('←',this.ID)
+                    this.fadeArrow()
+                    break;
+                }
                 if(this.ID + z > 131 
                 && this.ID + z < 137
                 && two.innerHTML === ''){
@@ -170,6 +191,10 @@ export default {
             }else return
            
         },
+        fadeArrow(){
+            let v = this.ID
+            setTimeout(()=>this.changeRocksContent('',v),this.delay)
+        },
         //判断触发
         judgment(t){
             let upMe = document.getElementById(`${this.ID - 1}`)
@@ -184,7 +209,10 @@ export default {
                 || downMe.innerHTML === t 
                 || leftMe.innerHTML === t 
                 || rightMe.innerHTML === t ){
-                    document.removeEventListener("keydown",this.keyDownEvent);   
+                    this.$parent.soundOpenDoor();
+                    document.removeEventListener("keydown",this.keyDownEvent);
+                    rightMe.style.opacity = 0
+                    rightMe.style.transition=('all','1s');  
                     alert('you win')
                 }else return
             }else return

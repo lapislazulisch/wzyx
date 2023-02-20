@@ -81,17 +81,17 @@ export default {
     //监听键盘指令
     this.keyDownEvent = (event) => {this.keyDownEvents(event)}
     document.addEventListener("keydown",this.keyDownEvent);
-      //将文本内容填充
-      this.DELAY = this.String1_1.length * this.delay + this.String1_2.length * this.delay + this.String1_3.length * this.delay
-      this.initializeF(this.DELAY)
-      this.drawsimplerow(this.String1_1,this.Start1_1)
-      setTimeout(()=>this.drawsimplerow(this.String1_2,this.Start1_2), 
+    //将文本内容填充
+    this.DELAY = this.String1_1.length * this.delay + this.String1_2.length * this.delay + this.String1_3.length * this.delay
+    this.initializeF(this.DELAY)
+    this.drawsimplerow(this.String1_1,this.Start1_1)
+    setTimeout(()=>this.drawsimplerow(this.String1_2,this.Start1_2), 
         this.String1_1.length * this.delay);
-      setTimeout(()=>this.drawsimplerow(this.String1_3,this.Start1_3), 
+    setTimeout(()=>this.drawsimplerow(this.String1_3,this.Start1_3), 
         this.String1_1.length * this.delay + this.String1_2.length * this.delay);
+    this.$parent.soundScript(this.DELAY)
     },
     beforeDestroy(){
-        console.log('1');
         document.removeEventListener("keydown",this.keyDownEvent); 
     },
     methods:{
@@ -188,6 +188,7 @@ export default {
             setTimeout(()=>this.drawsimplerow(this.String2_3,this.Start2_3), 
                 this.String2_1.length * this.delay 
                 + this.String2_2.length * this.delay);
+            this.$parent.soundScript(this.DELAY)
             break;
             case 3:
             this.DELAY = this.String3_1.length * this.delay 
@@ -201,6 +202,7 @@ export default {
             setTimeout(()=>this.drawsimplerow(this.String3_3,this.Start3_3), 
                 this.String3_1.length * this.delay 
                 + this.String3_2.length * this.delay);
+            this.$parent.soundScript(this.DELAY)
             break;
             case 4:
             this.DELAY = this.String4_1.length * this.delay 
@@ -214,6 +216,7 @@ export default {
             setTimeout(()=>this.drawsimplerow(this.String4_3,this.Start4_3), 
                 this.String4_1.length * this.delay 
                 + this.String4_2.length * this.delay);
+            this.$parent.soundScript(this.DELAY)
             break;
             case 5:
             this.DELAY = this.String5_1.length * this.delay 
@@ -227,6 +230,7 @@ export default {
             setTimeout(()=>this.drawsimplerow(this.String5_3,this.Start5_3), 
                 this.String5_1.length * this.delay 
                 + this.String5_2.length * this.delay);
+            this.$parent.soundScript(this.DELAY)
             break;
             case 6:
             this.DELAY = this.String6_1.length * this.delay 
@@ -240,6 +244,7 @@ export default {
             setTimeout(()=>this.drawsimplerow(this.String6_3,this.Start6_3), 
                 this.String6_1.length * this.delay 
                 + this.String6_2.length * this.delay);
+            this.$parent.soundScript(this.DELAY)
             break;
             case 7:
             this.DELAY = this.String7_1.length * this.delay 
@@ -253,10 +258,14 @@ export default {
             setTimeout(()=>this.drawsimplerow(this.String7_3,this.Start7_3), 
                 this.String7_1.length * this.delay 
                 + this.String7_2.length * this.delay);
+            this.$parent.soundScript(this.DELAY)
             break;
             case 8:
+            this.$parent.soundScript(this.DELAY);
             document.removeEventListener("keydown",this.keyDownEvent);
-            this.$parent.updataCheckPoint();
+            setTimeout(() => {
+                this.$parent.updataCheckPoint();
+            }, 1000);
         }
         },
         //横向填充

@@ -1,6 +1,8 @@
 <template>
   <div class="home">
     <nav id="nav">
+      <audio id="script" src="../assets/script.mp3"></audio>
+      <audio id="opendoor" src="../assets/opendoor.mp3"></audio>
       <ul v-if="m === 0" class="menu1">
         <li class="text maintitle" @click="mainTitle()">主菜单</li><li>|</li>
         <li class="text beforepuzzle" @click="backCheckPoint()">上一关</li><li>|</li>
@@ -18,12 +20,12 @@
     <div class="title" v-if="this.$store.state.checkPoint === -1">文 字 游 戏</div>
     <!-- <router-link style="text-align: center;" to="/puzzle_01" v-if="this.checkPoint === ''">作者信息</router-link>
     <br> -->
-    <div class="item" v-if="this.$store.state.checkPoint === -1" @click="open0()">开始游戏</div>
+    <div class="item" v-if="this.$store.state.checkPoint === -1" @click="updataCheckPoint()">开始游戏</div>
     <div id="empty0"></div>
     <div class="item" v-if="this.$store.state.checkPoint === -1" @click="open0()">选择关卡</div>
     <div id="empty1"></div>
     <div class="item" v-if="this.$store.state.checkPoint === -1" @click="editor()">作者信息</div>
-    <div v-if="this.$store.state.checkPoint === 666"></div>
+    <div v-if="this.$store.state.checkPoint === 666"><editorInfo/></div>
     <div v-if="this.$store.state.checkPoint === 0"><content_01/></div>
     <div v-if="this.$store.state.checkPoint === 1"><screen_start_01/></div>
     <div v-if="this.$store.state.checkPoint === 2"><screen_start_02/></div>
@@ -32,6 +34,7 @@
 </template>
 
 <script>
+import editorInfo from '@/components/editorInfo.vue'
 import content_01 from '@/components/content/content_01.vue'
 import content_02 from '@/components/content/content_02.vue'
 import screen_start_01 from '@/components/screen/screen_start_01.vue'
@@ -41,10 +44,12 @@ import store from '@/store'
 export default {
   name: 'HomeView',
   components: {
+    editorInfo,
     content_01,
     content_02,
     screen_start_01,
     screen_start_02,
+    
   },
   data(){
     return{
@@ -55,16 +60,18 @@ export default {
     this.heightQuestion()
   },
   methods:{
+    //下一关
     updataCheckPoint(){
       store.commit('next');
       this.heightQuestion()
     },
+    //上一关
     backCheckPoint(){
       store.commit('back');
       this.heightQuestion()
     },
     retry(){
-      this.heightQuestion()
+      this.soundScript(3000)
     },
     editor(){
       store.commit('editor')
@@ -81,14 +88,26 @@ export default {
       this.m = 1;
     },
     async mainTitle(){
-      await store.commit('mainTitle')
-      this.heightQuestion()
+      location.reload()
+      // await store.commit('mainTitle')
+      // this.heightQuestion()
     },
     heightQuestion(){
       let empty0 = document.getElementById('empty0')
       let empty1 = document.getElementById('empty1')
       this.$store.state.checkPoint >= 0 ? empty0.style.height = 0:empty0.style.height = '1rem'
-      this.$store.state.checkPoint   >= 0 ? empty1.style.height = 0:empty1.style.height = '1rem'
+      this.$store.state.checkPoint >= 0 ? empty1.style.height = 0:empty1.style.height = '1rem'
+    },
+    soundScript(delay){
+      let script = document.getElementById('script')
+      script.play()
+      setTimeout(() => {
+        script.pause()
+      }, delay);
+    },
+    soundOpenDoor(){
+      let opendoor = document.getElementById('opendoor')
+      opendoor.play()
     },
   }
 }

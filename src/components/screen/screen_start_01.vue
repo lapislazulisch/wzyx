@@ -28,6 +28,7 @@ export default {
         Start2:63,
         //触发点
         tp:'门',
+        DELAY:'',
     }
   },
   mounted() {
@@ -36,6 +37,7 @@ export default {
     this.initializeContainer();
     this.createWall();
     //监听键盘指令
+    this.DELAY = (this.String1.length + this.String2) * this.delay
     setTimeout(() => {
         this.keyDownEvent = (event) => {this.keyDownEvents(event)}
         document.addEventListener("keydown",this.keyDownEvent);
@@ -43,9 +45,9 @@ export default {
     //将文本内容填充
     this.drawsimplerow(this.String1,this.Start1)
     setTimeout(() => this.drawsimplerow(this.String2,this.Start2), this.String1.length * this.delay);
+    this.$parent.soundScript(this.DELAY)
     },
     beforeDestroy(){
-        console.log('1');
         document.removeEventListener("keydown",this.keyDownEvent); 
     },
     methods:{
@@ -126,10 +128,31 @@ export default {
             && this.ID + z > 0 
             && futureMe.innerHTML === ''){
                 this.changeRocksContent('我',`${this.ID + z}`)
-                this.changeRocksContent('',this.ID)
+                switch(z){
+                    case 1:
+                    this.changeRocksContent('↓',this.ID)
+                    this.fadeArrow()
+                    break;                   
+                    case this.GROUND_HEIGTH:
+                    this.changeRocksContent('→',this.ID)
+                    this.fadeArrow()
+                    break;
+                    case -1:
+                    this.changeRocksContent('↑',this.ID)
+                    this.fadeArrow()
+                    break;
+                    case -this.GROUND_HEIGTH:
+                    this.changeRocksContent('←',this.ID)
+                    this.fadeArrow()
+                    break;
+                }
                 this.ID += z;
             }else return
            
+        },
+        fadeArrow(){
+            let v = this.ID
+            setTimeout(()=>this.changeRocksContent('',v),this.delay)
         },
         //判断触发
         judgment(t){
@@ -144,12 +167,14 @@ export default {
                 if(upMe.innerHTML === t 
                 || downMe.innerHTML === t 
                 || leftMe.innerHTML === t 
-                || rightMe.innerHTML === t ){
-                    document.removeEventListener("keydown",this.keyDownEvent);   
-                    this.$parent.updataCheckPoint()
-                    // this.$router.push({
-                    //     path: 'puzzle_02'
-                    // })
+                || rightMe.innerHTML === t ){  
+                    this.$parent.soundOpenDoor();
+                    document.removeEventListener("keydown",this.keyDownEvent);
+                    upMe.style.opacity = 0
+                    upMe.style.transition=('all','1s');
+                    setTimeout(() => {
+                        this.$parent.updataCheckPoint();
+                    }, 1000);
                 }else return
             }else return
         },
